@@ -704,7 +704,7 @@ def handle_message(message):
 
         get_user(user_id)["msg_count"] = get_user(user_id).get("msg_count", 0) + 1
 
-        # 🛠️ تعریف pending ها قبل از هر چیز (مشکل اصلی کد قبلی اینجا بود)
+        # 🛠️ تعریف pending ها دقیقاً اینجا (مشکل اصلی کد قبلی اینجا بود)
         pending = db["pending_orders"].get(user_id, {})
         pmem = db["pending_members"].get(user_id, {})
         pt = db["pending_transfer"].get(user_id, {})
