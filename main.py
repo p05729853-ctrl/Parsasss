@@ -524,7 +524,7 @@ def forward_to_all_worker(owner_id, from_chat_id, message_id):
 def check_guaranteed_members():
     while True:
         try:
-            time.sleep(3)
+            time.sleep(3)  # هر 3 ثانیه چک میکنه
             now = datetime.now()
             hours = get_setting("guaranteed_hours", 48)
             penalty = get_setting("guaranteed_penalty", 7)
@@ -703,6 +703,11 @@ def handle_message(message):
             save_db_async()
 
         get_user(user_id)["msg_count"] = get_user(user_id).get("msg_count", 0) + 1
+
+        # 🛠️ تعریف pending ها قبل از هر چیز (مشکل اصلی کد قبلی اینجا بود)
+        pending = db["pending_orders"].get(user_id, {})
+        pmem = db["pending_members"].get(user_id, {})
+        pt = db["pending_transfer"].get(user_id, {})
 
         main_buttons = ["🪙 کسب سکه", "👁️ ثبت سفارش سین", "👥 ثبت سفارش عضو", "💰 سکه‌های من", "🎁 زدن کد هدیه", "👥 دعوت دوستان", "👤 حساب کاربری", "🎁 هدیه روزانه", "🎡 گردونه شانس", "💬 پشتیبانی", "📖 راهنما", "👑 پنل مالک", "🔙 بازگشت"]
 
