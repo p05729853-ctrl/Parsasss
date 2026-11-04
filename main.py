@@ -115,7 +115,7 @@ def load_db():
             "guaranteed_cooldown": 300, "normal_member_penalty": 0,
             "normal_member_hours": 0, "normal_member_coin_penalty": 0,
             "min_sin": 15, "min_member": 3,
-            "vip_sin": 2, "vip_member_normal": 6, "vip_member_guaranteed": 14
+            "vip_sin": 2, "vip_member_guaranteed": 14
         }
     }
 
@@ -193,15 +193,6 @@ def is_vip(user_id):
         save_db_async()
         return False
     return True
-
-def get_vip_time_left(user_id):
-    uid = str(user_id)
-    if uid not in db.get("vip_users", {}): return None
-    expiry = db["vip_users"][uid].get("expiry")
-    if not expiry: return None
-    rem = expiry - datetime.now().timestamp()
-    if rem <= 0: return None
-    return rem
 
 def convert_number(text):
     for p, e in zip("۰۱۲۳۴۵۶۷۸۹", "0123456789"):
@@ -666,7 +657,6 @@ def handle_message(message):
 
         get_user(user_id)["msg_count"] = get_user(user_id).get("msg_count", 0) + 1
 
-        # ═══ تعریف pending ═══
         pending = db["pending_orders"].get(user_id, {})
         pmem = db["pending_members"].get(user_id, {})
         pt = db["pending_transfer"].get(user_id, {})
@@ -1250,9 +1240,6 @@ def handle_callback(callback):
             answer_callback(callback_id, f"✅ آیدی: {user_id}", show_alert=True); return
 
         pending = db["pending_orders"].get(user_id, {})
-
-        if data.startswith("game_join_"):
-            pass
 
         if data.startswith("packet_"):
             pid = data.replace("packet_", "")
